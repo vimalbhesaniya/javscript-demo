@@ -1,91 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
+</head>
+
+<body>
     <section class="section">
 
-      <div class="formContainer" >
-        <form action="" name="form" method="get" id="form">
-          <div>
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name" />
-          </div>
-          <div>
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" />
-          </div>
-          <div>
-            <label for="name">Gender</label>
-            <div id="hobbies">
-              <label for="male">Male</label>
-              <input type="radio" name="gender" id="male" value="Male" />
-              <label for="female">Female</label>
-              <input type="radio" name="gender" id="female" value="Female" />
-            </div>
-          </div>
-          <div id="">
-            <label for="name"> Hobby</label>
-            <div id="hobbies">
-              <input
-                type="checkbox"
-                name="hobby"
-                value="Reading"
-              />
-              <label for="country">Reading</label>
-              <input type="checkbox" id="sports" name="hobby" value="Sports" />
-              <label for="sports">Sports</label>
-              <input
-                type="checkbox"
-                id="traveling"
-                name="hobby"
-                value="Traveling"
-              />
-              <label for="traveling">Traveling</label>
-            </div>
-          </div>
-          <div>
-            <label for="country">Country</label>
-            <select name="Country" id="country" ></select>
-          </div>
-          <div>
-            <label for="state">State</label>
-            <select name="State" id="state"></select>
-          </div>
-          <div>
-            <label for="city">City</label>
-            <select name="City" id="city"></select>
-          </div>
-          <div>
-            <button type="submit">Save</button>
-          </div>
-        </form>
-      </div>
+        <div class="formContainer">
+            <form action="" name="form" method="get" id="form">
+                <div>
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="name" />
+                    <span class="error" id="nameError"></span>
+                </div>
+                <div>
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" />
+                    <span class="error" id="emailError"></span>
+                </div>
+                <div>
+                    <label for="name">Gender</label>
+                    <div id="hobbies">
+                        <label for="male">Male</label>
+                        <input type="radio" name="gender" id="male"  value="Male" />
+                        <label for="female">Female</label>
+                        <input type="radio" name="gender" id="female" value="Female" />
+                    </div>
+                    <span class="error" id="genderError"></span>
+                </div>
+                <div id="">
+                    <label for="name"> Hobby</label>
+                    <div id="hobbies">
+                        <input type="checkbox" name="hobby" value="Reading" />
+                        <label for="reading">Reading</label>
+                        <input type="checkbox" id="sports" name="hobby" value="Sports" />
+                        <label for="sports">Sports</label>
+                        <input type="checkbox" id="traveling" name="hobby" value="Traveling" />
+                        <label for="traveling">Traveling</label>
+                    </div>
+                    <span class="error" id="hobbyError"></span>
+                </div>
+                <div>
+                    <label for="country">Country</label>
+                    <select name="Country" id="country"></select>
+                    <span class="error" id="countryError"></span>
+                </div>
+                <div>
+                    <label for="state">State</label>
+                    <select name="State" id="state"></select>
+                    <span class="error" id="stateError"></span>
+                </div>
+                <div>
+                    <label for="city">City</label>
+                    <select name="City" id="city"></select>
+                    <span class="error" id="cityError"></span>
+                </div>
+                <div>
+                    <button type="submit">Save</button>
+                </div>
+            </form>
+        </div>
 
-      <div class="displayDetails">
+        <div class="displayDetails">
             <table border="5" id="table">
                 <thead>
-                   <tr>
-                       <th>Name</th>
-                       <th>Email</th>
-                       <th>Gender</th>
-                       <th>Hobby</th>
-                       <th>Conuntry</th>
-                       <th>State</th>
-                       <th>City</th>
-                       <th>Action</th>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Hobby</th>
+                        <th>Conuntry</th>
+                        <th>State</th>
+                        <th>City</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="data">
                 </tbody>
             </table>
-      </div>
+        </div>
 
     </section>
     <script src="app.js"></script>
-  </body>
+</body>
+
 </html>

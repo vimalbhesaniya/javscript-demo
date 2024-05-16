@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .section {
@@ -91,4 +92,9 @@ form div:not(:nth-child(3)) {
 }
 .btnDelete:hover {
   background-color: rgb(247, 92, 92);
+}
+
+.error{
+    color: red;
+    font-size: 14px;
 }
