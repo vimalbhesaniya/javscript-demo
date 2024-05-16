@@ -221,6 +221,21 @@ document.getElementById("form").addEventListener("submit", (event) => {
     let gender = document.forms["form"]["gender"].value;
     let chkBox = document.querySelectorAll("input[type='checkbox']:checked");
     let hobbies = [];
+    let address = [];
     chkBox.forEach((e) => hobbies.push(e.value));
     let selectedAddress = document.querySelectorAll("select");
-});
+    selectedAddress.forEach((e , i)=>{
+        address.push(e.selectedOptions.item(0).innerHTML)
+    })
+    users = [...users  , {
+        name : name,
+        email : email ,
+        gender : gender,
+        hobby : hobbies,
+        country : address[0],
+        state : address[1],
+        city : address[2],
+    } ]
+
+    display(users)
+})
