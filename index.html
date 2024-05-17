@@ -47,21 +47,30 @@
                 </div>
                 <div>
                     <label for="country">Country</label>
-                    <select name="Country" id="country"></select>
+                    <select name="Country" id="country">
+                        
+                    </select>
                     <span class="error" id="countryError"></span>
                 </div>
                 <div>
                     <label for="state">State</label>
-                    <select name="State" id="state"></select>
-                    <span class="error" id="stateError"></span>
+                    <select name="State" id="state">
+                        
+                    </select>
+                    <span class="error" id="stateError">
+                    </span>
                 </div>
                 <div>
                     <label for="city">City</label>
-                    <select name="City" id="city"></select>
+                    <select name="City" id="city">
+                        
+                    </select>
                     <span class="error" id="cityError"></span>
                 </div>
-                <div>
-                    <button type="submit">Save</button>
+                <div class="buttons">
+                    <button type="submit" class="" id="save">Save</button>
+                    <button type="button" class="hide" id="edit" >Update</button>
+                    <button type="reset" class="hide" id="cancle" >Cancle</button>
                 </div>
             </form>
         </div>
@@ -86,6 +95,7 @@
         </div>
 
     </section>
+    <script src="data.js"></script>
     <script src="app.js"></script>
 </body>
 

@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
 .section {
@@ -43,8 +43,6 @@ form div:not(:nth-child(3)) {
   gap: 7px;
   justify-content: space-between;
 }
-
-
 
 .displayDetails {
   width: 100%;
@@ -94,7 +92,24 @@ form div:not(:nth-child(3)) {
   background-color: rgb(247, 92, 92);
 }
 
-.error{
-    color: red;
-    font-size: 14px;
+.error {
+  color: red;
+  font-size: 14px;
+}
+
+.buttons {
+  display: flex !important;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-direction: row !important;
+}
+
+.buttons button {
+  width: 100%;
+}
+
+.hide{
+  display: none;
 }
