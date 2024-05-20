@@ -20,14 +20,14 @@
                 </div>
                 <div>
                     <label for="email">Email</label>
-                    <input type="email" name="email" id="email" />
+                    <input type="text" name="email" id="email" />
                     <span class="error" id="emailError"></span>
                 </div>
                 <div>
                     <label for="name">Gender</label>
                     <div id="hobbies">
                         <label for="male">Male</label>
-                        <input type="radio" name="gender" id="male"  value="Male" />
+                        <input type="radio" name="gender" id="male" value="Male" />
                         <label for="female">Female</label>
                         <input type="radio" name="gender" id="female" value="Female" />
                     </div>
@@ -48,14 +48,14 @@
                 <div>
                     <label for="country">Country</label>
                     <select name="Country" id="country">
-                        
+
                     </select>
                     <span class="error" id="countryError"></span>
                 </div>
                 <div>
                     <label for="state">State</label>
                     <select name="State" id="state">
-                        
+
                     </select>
                     <span class="error" id="stateError">
                     </span>
@@ -63,19 +63,28 @@
                 <div>
                     <label for="city">City</label>
                     <select name="City" id="city">
-                        
+
                     </select>
                     <span class="error" id="cityError"></span>
                 </div>
                 <div class="buttons">
                     <button type="submit" class="" id="save">Save</button>
-                    <button type="button" class="hide" id="edit" >Update</button>
-                    <button type="reset" class="hide" id="cancle" >Cancle</button>
+                    <button type="reset" class="hide" id="edit">Update</button>
+                    <button type="reset" class="hide" id="cancle">Cancle</button>
                 </div>
             </form>
         </div>
 
         <div class="displayDetails">
+            <div class="globleActions">
+                <input type="text" id="searchBox" placeholder="Search...">
+                <select name="" id="select" onchange="shortByName(this)">
+                    <option value="0">Default</option>
+                    <option value="1">Ascending</option>
+                    <option value="2">Descending</option>
+                </select>
+            </div>
+
             <table border="5" id="table">
                 <thead>
                     <tr>
@@ -86,7 +95,10 @@
                         <th>Conuntry</th>
                         <th>State</th>
                         <th>City</th>
-                        <th>Action</th>
+                        <th>
+                            <span>Action</span>
+
+                        </th>
                     </tr>
                 </thead>
                 <tbody id="data">

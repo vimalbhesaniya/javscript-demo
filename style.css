@@ -46,9 +46,9 @@ form div:not(:nth-child(3)) {
 
 .displayDetails {
   width: 100%;
+  gap: 10px;
   display: flex;
-  justify-content: center;
-  align-items: baseline;
+  flex-direction: column;
   margin-top: 80px;
   padding: 0 150px;
 }
@@ -112,4 +112,32 @@ form div:not(:nth-child(3)) {
 
 .hide{
   display: none;
+}
+
+.globleActions{
+  display: flex;
+  gap: 10px;
+}
+
+.globleActions #searchBox , #select{
+  width: 100%;
+  padding: 10px 12px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  border-bottom: 2px solid black;
+  font-size: 18px;
+} 
+
+#searchBox{
+  background-image: url(https://icons.veryicon.com/png/o/education-technology/education-app/search-137.png);
+  background-repeat: no-repeat;
+  background-position: 99%;
+  background-size: 25px;
+}
+
+.globleActions  #select{
+  max-width: 200px;
+  padding: 0px 20px;
+  background-color: bisque;
 }
