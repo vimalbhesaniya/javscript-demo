@@ -8,15 +8,20 @@ let username, gender, isAnyError, chkBox, email;
 let hobbies = [];
 let globleUpdateId;
 let address = [];
-let dataToBeUpdate = []
 let users = getFromStorage("users") || [];
 let countrySelectBox = document.getElementById("country");
 let stateSelectBox = document.getElementById("state");
 let citySelectBox = document.getElementById("city");
 let form = document.getElementById("form")
-let flag = {
-    submitSTATE : false,
-    editSTATE : false,   
+let submitFormState = true;
+let handleEditAndDeleteFlage = () => {
+    if (!submitFormState) {
+        save.innerHTML = "Update"
+        globleUpdateId = undefined
+    }
+    else {
+        save.innerHTML = "Save"
+    }
 }
 
 //data set in locatorage
@@ -123,7 +128,6 @@ stateSelectBox.addEventListener("change", (event) => {
     handleSelection(cities[0], citySelectBox, "id", "name", "Select City");
 });
 
-
 //validations
 let checkEmail = (email, whereToShow) => {
     let error = document.getElementById(whereToShow);
@@ -145,7 +149,7 @@ let checkEmail = (email, whereToShow) => {
     }
 };
 
-document.getElementById("email").addEventListener("change" , (event) => checkEmail(event.target.value , "emailError"))
+document.getElementById("email").addEventListener("change", (event) => checkEmail(event.target.value, "emailError"))
 
 //this method will check input is valid or not
 let checkInputs = (errMsg, value, whereToShow, type) => {
@@ -214,27 +218,39 @@ let checkErrors = () => {
 let msg = "This field is required";
 document.getElementById("form").addEventListener("submit", (event) => {
     event.preventDefault();
+    handleEditAndDeleteFlage()
     getDataFromUser();
+    globleUpdateId = getFromStorage("userIdToUpdate")
+    let assignDataToArray = {
+        name: username?.value,
+        email: email?.value,
+        gender: gender,
+        hobby: hobbies,
+        country: { id: address[0]?.key, value: address[0]?.value },
+        state: { id: address[1]?.key, value: address[1]?.value },
+        city: { id: address[2]?.key, value: address[2]?.value },
+        id: submitFormState ? Math.trunc(Math.random() * 1000000) : globleUpdateId
+    }
+
     isAnyError = checkErrors().every((err) => (err ? 1 : 0));
     if (isAnyError) {
-        users = [
-            ...users,
-            {
-                name: username?.value,
-                email: email?.value,
-                gender: gender,
-                hobby: hobbies,
-                country: { id: address[0]?.key, value: address[0]?.value },
-                state: { id: address[1]?.key, value: address[1]?.value },
-                city: { id: address[2]?.key, value: address[2]?.value },
-                id: Math.trunc(Math.random() * 1000000)
-            }
-        ];
+        if (submitFormState) {
+            users = [...users, assignDataToArray]
+        }
+        else {
+            dataToUpdateId = users.findIndex((e) => e.id == globleUpdateId);
+            users = users.with(
+                dataToUpdateId,
+                assignDataToArray
+            )
+        }
         form.reset();
     }
+    globleUpdateId = undefined
     setInStorage('users', users)
     display(getFromStorage('users'));
     clearField()
+    submitFormState = true
 });
 
 //when user click on delete button 
@@ -245,30 +261,32 @@ let handledelete = (id) => {
 };
 
 let deleteButton, editButton;
-let afterUpdate = (id) => {
+function afterUpdate(id) {
     deleteButton = document.getElementById(`btnDelete${id}`)
     editButton = document.getElementById(`btnEdit${id}`)
-    save.classList.add("hide");
-    edit.classList.remove("hide");
     cancle.classList.remove("hide");
 }
 
-let beforUpdate = () => {
-    save.classList.remove("hide");
-    edit.classList.add("hide");
+function beforUpdate() {
     cancle.classList.add("hide");
     handleSelection([], citySelectBox, "", "", "Select City", "0");
     handleSelection([], stateSelectBox, "", "", "Select State", "0");
     handleSelection([], countrySelectBox, "", "", "Select Country", "0");
     globleUpdateId = undefined
     display(users);
+    submitFormState = true
+    handleEditAndDeleteFlage()
+
 }
 
 //update functionality
 let userWhoWillUpdate;
 let handleUpdate = (updateId) => {
+    submitFormState = false;
+    handleEditAndDeleteFlage()
     userWhoWillUpdate = users.find((e) => e.id == updateId);
-    globleUpdateId = updateId
+    setInStorage("userIdToUpdate" , updateId)
+    globleUpdateId = getFromStorage("userIdToUpdate")
     display(users)
     getDataFromUser();
     afterUpdate(updateId)
@@ -296,31 +314,6 @@ let handleUpdate = (updateId) => {
     let cities = getCityForState(cid, sid);
     handleSelection(cities[0], citySelectBox, "id", "name", "Select City", userWhoWillUpdate.city.id);
 };
-
-let updateButton = document.getElementById("edit");
-updateButton.addEventListener("click", () => {
-    isAnyError = checkErrors().every((err) => (err ? 1 : 0));
-    let dataToUpdateId = users.findIndex((e) => e.id == globleUpdateId);
-    if (isAnyError) {
-        users = users.with(
-            dataToUpdateId,
-            {
-                name: username?.value,
-                email: email?.value,
-                gender: gender,
-                hobby: hobbies,
-                country: { id: address[0]?.key, value: address[0]?.value },
-                state: { id: address[1]?.key, value: address[1]?.value },
-                city: { id: address[2]?.key, value: address[2]?.value },
-                id: userWhoWillUpdate.id
-            }
-        )
-        globleUpdateId = undefined
-        beforUpdate()
-        setInStorage('users', users)
-        display(getFromStorage("users"))
-    }
-});
 
 //sorting
 let shortByName = (e) => {
