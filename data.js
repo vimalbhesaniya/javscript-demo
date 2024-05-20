@@ -175,3 +175,8 @@ let city = [
     ],
   },
 ];
+
+
+document.getElementById("name").addEventListener("change" , (e) =>{
+  console.log(e.target.value);
+})
