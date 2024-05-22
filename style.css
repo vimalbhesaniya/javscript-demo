@@ -142,3 +142,31 @@ form div:not(:nth-child(3)) {
   background-color: bisque;
 }
 
+.tableHeader{
+ display: flex;
+ justify-content: space-between;
+ align-items: center; 
+}
+
+.sorting{
+  display: flex;
+  flex-direction: column; 
+}
+
+.up , .down{
+  background: none;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none; 
+}
+
+.active {
+  display: block;
+}
+
+.upPng , .downpng{
+  width: 10px;
+}
+
