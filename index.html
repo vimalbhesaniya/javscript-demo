@@ -14,12 +14,13 @@
             <form action="" name="form" method="get" id="form">
                 <div>
                     <label for="name">Name</label>
-                    <input type="text" name="name" id="name" />
+                    <input type="text" name="name" id="name" class="inputBox" />
+                    <input type="text" hidden name="date" id="date" >
                     <span class="error" id="nameError"></span>
                 </div>
                 <div>
                     <label for="email">Email</label>
-                    <input type="text" name="email" id="email" />
+                    <input type="text" name="email" id="email" class="inputBox" />
                     <span class="error" id="emailError"></span>
                 </div>
                 <div>
@@ -46,14 +47,14 @@
                 </div>
                 <div>
                     <label for="country">Country</label>
-                    <select name="Country" id="country">
+                    <select name="Country" id="country" class="inputBox" >
 
                     </select>
-                    <span class="error" id="countryError"></span>
+                    <span class="error" id="countryError" ></span>
                 </div>
                 <div>
                     <label for="state">State</label>
-                    <select name="State" id="state">
+                    <select name="State" id="state" class="inputBox" >
 
                     </select>
                     <span class="error" id="stateError">
@@ -61,19 +62,19 @@
                 </div>
                 <div>
                     <label for="city">City</label>
-                    <select name="City" id="city">
+                    <select name="City" id="city" class="inputBox" >
 
                     </select>
                     <span class="error" id="cityError"></span>
                 </div>
                 <div class="buttons">
-                    <button type="submit" class="" id="save">save</button>
-                    <button type="reset" class="hide" id="cancle">Cancle</button>
+                    <button type="submit" class="saveEditButton" id="save">save</button>
+                    <button type="reset" class="hide saveEditButton" id="cancle">Cancle</button>
                 </div>
             </form>
         </div>
 
-        <div class="displayDetails">
+        <div class="displayDetails" >
             <div class="globleActions">
                 <select name="" id="select" >
                     <option value="0">Filter By</option>
@@ -148,6 +149,15 @@
                                 </div>
                             </div>
                         </th>
+                        <th >
+                            <div class="tableHeader">
+                                <p>Date Of Join</p>
+                                <div class="sorting" id="sortingButtons">
+                                    <button class="up arrow" value="dateAsc" id="cityasc" onclick="shortTableWithPerticulerField(this , 'date' , 'value'  )"><img src="up.png" class="upPng" alt=""></button>
+                                    <button class="down arrow" value="dateDesc" id="citydesc" onclick="shortTableWithPerticulerField(this , 'date' ,'value' )" ><img src="down.png" class="downpng" alt=""></button>
+                                </div>
+                            </div>
+                        </th>
                         <th > 
                             <span>Action</span>
                         </th>
@@ -157,7 +167,6 @@
                 </tbody>
             </table>
         </div>
-
     </section>
     <script src="data.js"></script>
     <script src="app.js"></script>

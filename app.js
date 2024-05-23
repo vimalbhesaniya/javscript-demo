@@ -4,8 +4,10 @@ let statesState = [];
 let cityState = [];
 var cid;
 let errorState = [];
-let username, gender, isAnyError, chkBox, email;
-let hobbies = [];
+let username = document.getElementById("name")
+let selectedGender, isAnyError, selectedCheckBox;
+let email = document.getElementById("email")
+let selectedHobbies = [];
 let globleUpdateId;
 let address = [];
 let users = getFromStorage("users") || [];
@@ -36,7 +38,7 @@ function getFromStorage(key) {
 
 //clearing field
 let clearField = () => {
-    hobbies = [];
+    selectedHobbies = [];
     address = [];
     errorState = [];
     countryState = [];
@@ -48,13 +50,9 @@ let clearField = () => {
 //Handling  Form
 function getDataFromUser() {
     clearField();
-    username = document.getElementById("name");
-    email = document.getElementById("email");
-    document
-        .querySelectorAll("input[type='radio']:checked")
-        .forEach((e) => (gender = e.value));
-    chkBox = document.querySelectorAll("input[type='checkbox']:checked");
-    chkBox.forEach((e) => hobbies.push(e?.value));
+    document.querySelectorAll("input[type='radio']:checked").forEach((e) => (selectedGender = e.value));
+    selectedCheckBox = document.querySelectorAll("input[type='checkbox']:checked");
+    selectedCheckBox.forEach((e) => selectedHobbies.push(e?.value));
     let selectedAddress = document.querySelectorAll("select");
     selectedAddress.forEach((e) => {
         if (e.selectedOptions.item(0)?.value !== "0") {
@@ -174,8 +172,7 @@ let checkInputs = (errMsg, value, whereToShow, type, allowNumber) => {
                     if (numRegx.test(value)) {
                         where.innerHTML = "Number & Special characters not allowed";
                         return false;
-                    }
-                    else {
+                    } else {
                         where.innerHTML = "";
                         return true;
                     }
@@ -222,47 +219,71 @@ let checkInputs = (errMsg, value, whereToShow, type, allowNumber) => {
 let checkErrors = () => {
     getDataFromUser();
     return (errorState = [
-        checkInputs("Please select your name", username.value, "nameError", "text", true),
+        checkInputs(
+            "Please select your name",
+            username.value,
+            "nameError",
+            "text",
+            true
+        ),
         checkInputs("", email.value, "emailError", "email"),
-        checkInputs("Please select your gender", gender, "genderError", "radio"),
-        checkInputs("Please select atleast one hobby", hobbies, "hobbyError", "checkbox"),
-        checkInputs("Please select your country", address[0].value, "countryError", "select"),
-        checkInputs("Please select your state", address[1].value, "stateError", "select"),
-        checkInputs("Please select your city", address[2].value, "cityError", "select"),
+        checkInputs(
+            "Please select your gender",
+            selectedGender,
+            "genderError",
+            "radio"
+        ),
+        checkInputs(
+            "Please select atleast one hobby",
+            selectedHobbies,
+            "hobbyError",
+            "checkbox"
+        ),
+        checkInputs(
+            "Please select your country",
+            address[0].value,
+            "countryError",
+            "select"
+        ),
+        checkInputs(
+            "Please select your state",
+            address[1].value,
+            "stateError",
+            "select"
+        ),
+        checkInputs(
+            "Please select your city",
+            address[2].value,
+            "cityError",
+            "select"
+        ),
     ]);
 };
 
-let msg = "This field is required";
-document.getElementById("name")
-    .addEventListener("input", (nameEvent) =>
-        checkInputs("Name is required", nameEvent.target.value, "nameError", "text", true)
-    );
-document.getElementById("email")
-    .addEventListener("input", (emailEvent) =>
-        checkInputs("", emailEvent.target.value, "emailError", "email")
-    );
-document.getElementById("country")
-    .addEventListener("input", (countryEvent) =>
-        checkInputs("Please select your country", countryEvent.target.value, "countryError", "text")
-    );
-document.getElementById("state")
-    .addEventListener("input", (stateEvent) =>
-        checkInputs("Please select your state", stateEvent.target.value, "stateError", "text")
-    );
-document.getElementById("city")
-    .addEventListener("input", (cityEvent) =>
-        checkInputs("Please select your city", cityEvent.target.value, "cityError", "text")
-    );
+username.addEventListener("input", (nameEvent) =>
+    checkInputs("Name is required", nameEvent.target.value, "nameError", "text", true)
+);
+email.addEventListener("input", (emailEvent) =>
+    checkInputs("", emailEvent.target.value, "emailError", "email")
+);
+document.getElementById("country").addEventListener("input", (countryEvent) =>
+    checkInputs("Please select your country", countryEvent.target.value, "countryError", "text")
+);
+document.getElementById("state").addEventListener("input", (stateEvent) =>
+    checkInputs("Please select your state", stateEvent.target.value, "stateError", "text")
+);
+document.getElementById("city").addEventListener("input", (cityEvent) =>
+    checkInputs("Please select your city", cityEvent.target.value, "cityError", "text")
+);
 document.getElementsByName("hobby").forEach((e) =>
     e.addEventListener("input", () => {
-        getDataFromUser(); checkInputs("Please select atleast one hobby", hobbies, "hobbyError", "checkbox");
+        getDataFromUser(); checkInputs("Please select atleast one hobby", selectedHobbies, "hobbyError", "checkbox");
     })
 );
 
 document.getElementsByName("gender").forEach((genderEvent) =>
     genderEvent.addEventListener("input", () => {
-        getDataFromUser();
-        checkInputs("Please select your gender", gender, "genderError", "radio");
+        getDataFromUser(); checkInputs("Please select your gender", selectedGender, "genderError", "radio");
     })
 );
 
@@ -270,29 +291,32 @@ document.getElementsByName("gender").forEach((genderEvent) =>
 document.getElementById("form").addEventListener("submit", (event) => {
     event.preventDefault();
     handleEditAndDeleteFlage();
+    let date = new Date().toDateString()
     getDataFromUser();
     globleUpdateId = getFromStorage("userIdToUpdate");
     let assignDataToArray = {
         name: username?.value,
         email: email?.value,
-        gender: gender,
-        hobby: hobbies,
+        gender: selectedGender,
+        hobby: selectedHobbies,
         country: { id: address[0]?.key, value: address[0]?.value },
         state: { id: address[1]?.key, value: address[1]?.value },
         city: { id: address[2]?.key, value: address[2]?.value },
-        id: submitFormState ? Math.trunc(Math.random() * 1000000) : globleUpdateId,
+        id: submitFormState ? (new Date() * 100) / 50 : globleUpdateId,
+        date: date,
     };
 
-    console.log(checkErrors());
     isAnyError = checkErrors().every((err) => (err ? 1 : 0));
-    console.log(isAnyError);
     if (isAnyError) {
         if (submitFormState) {
-
             users = [...users, assignDataToArray];
         } else {
             dataToUpdateId = users.findIndex((e) => e.id == globleUpdateId);
             users = users.with(dataToUpdateId, assignDataToArray);
+            cancle.classList.add("hide");
+            submitFormState = true;
+            handleEditAndDeleteFlage();
+            beforUpdate()
         }
         form.reset();
     }
@@ -307,7 +331,6 @@ document.getElementById("form").addEventListener("submit", (event) => {
 let handledelete = (id) => {
     let confirmation = confirm("Are you sure");
     if (confirmation) {
-
         users = users.filter((e) => e.id != id);
         setInStorage("users", users);
         display(getFromStorage("users"));
@@ -338,12 +361,8 @@ function beforUpdate() {
 let userWhoWillUpdate;
 let handleUpdate = (updateId) => {
     submitFormState = false;
-
     handleEditAndDeleteFlage();
-    userWhoWillUpdate = users.find(
-        (e) => e.id == updateId
-    );
-
+    userWhoWillUpdate = users.find((e) => e.id == updateId);
     setInStorage("userIdToUpdate", updateId);
     globleUpdateId = localStorage.getItem("userIdToUpdate");
     display(users);
@@ -363,69 +382,86 @@ let handleUpdate = (updateId) => {
             ? (e.checked = true)
             : (e.checked = false);
     });
-
-    handleSelection(country, countrySelectBox, "cid", "country", "Select Country", userWhoWillUpdate.country.id);
+    date.value = userWhoWillUpdate.date;
+    handleSelection(country,countrySelectBox,"cid", "country","Select Country",userWhoWillUpdate.country.id
+    );
 
     let allState = getStateForContry(userWhoWillUpdate.country.id)[0];
-    handleSelection(allState, stateSelectBox, "sid", "state", "Select State", userWhoWillUpdate.state.id
+    handleSelection(allState,stateSelectBox,"sid","state","Select State",userWhoWillUpdate.state.id
     );
     cid = userWhoWillUpdate.country.id;
     sid = userWhoWillUpdate.state.id;
     let cities = getCityForState(cid, sid);
-    handleSelection(cities[0], citySelectBox, "id", "name", "Select City", userWhoWillUpdate.city.id);
+    handleSelection(cities[0], citySelectBox,"id", "name", "Select City", userWhoWillUpdate.city.id
+    );
 };
 
 //sorting
 let shortTableWithPerticulerField = (direction, sortWith, value) => {
-    let sorted, element, activeMode;
+    let sorted;
     element = document.getElementById(direction.id);
-    activeMode = document.activeElement
+    activeMode = document.activeElement;
 
-    let allArrows = document.querySelectorAll(".arrow")
+    let allArrows = document.querySelectorAll(".arrow");
     allArrows.forEach((e) => {
-        e.classList.remove("hide")
-    })
+        e.classList.remove("hide");
+    });
 
     switch (direction.value) {
         case "ascending":
-            direction.classList.add("hide")
-            sorted = getFromStorage("users").toSorted((a, b) =>
-                a[sortWith] < b[sortWith] ? -1 : a[sortWith] == b[sortWith] ? 0 : 1);
-            users = sorted;
-            display(users);
+            direction.classList.add("hide");
+            sorted = users.toSorted((a, b) =>
+                a[sortWith] < b[sortWith] ? -1 : a[sortWith] == b[sortWith] ? 0 : 1
+            );
+            display(sorted);
             break;
         case "descending":
-            direction.classList.add("hide")
-            sorted = getFromStorage("users").toSorted((a, b) =>
+            direction.classList.add("hide");
+            sorted = users.toSorted((a, b) =>
                 a[sortWith] > b[sortWith] ? -1 : a[sortWith] == b[sortWith] ? 0 : 1
             );
-            users = sorted;
-            display(users);
+            display(sorted);
 
             break;
         case "ascendingWithValue":
-            direction.classList.add("hide")
-            sorted = getFromStorage("users").toSorted((a, b) =>
+            direction.classList.add("hide");
+            sorted = users.toSorted((a, b) =>
                 a[sortWith][value] < b[sortWith][value]
                     ? -1
                     : a[sortWith][value] == b[sortWith][value]
                         ? 0
                         : 1
             );
-            users = sorted;
-            display(users);
+            display(sorted);
             break;
         case "descendingWithValue":
-            direction.classList.add("hide")
-            sorted = getFromStorage("users").toSorted((a, b) =>
+            direction.classList.add("hide");
+            sorted = users.toSorted((a, b) =>
                 a[sortWith][value] > b[sortWith][value]
                     ? -1
                     : a[sortWith][value] == b[sortWith][value]
                         ? 0
                         : 1
             );
-            users = sorted;
-            display(users);
+            display(sorted);
+            break;
+        case "dateAsc":
+            direction.classList.add("hide");
+            sorted = users.toSorted((a, b) => {
+                a = new Date(a[sortWith]);
+                b = new Date(b[sortWith]);
+                return a - b;
+            });
+            display(sorted);
+            break;
+        case "dateDesc":
+            direction.classList.add("hide");
+            sorted = users.toSorted((a, b) => {
+                a = new Date(a[sortWith]);
+                b = new Date(b[sortWith]);
+                return b - a;
+            });
+            display(sorted);
             break;
         case "0":
             display(getFromStorage("users"));
@@ -435,27 +471,37 @@ let shortTableWithPerticulerField = (direction, sortWith, value) => {
     }
 };
 
-//search handling
-let search = (value, searchedBy) => {
-    let searchedUsers = users.filter((e) => {
-        if (e[searchedBy].indexOf(value) != -1) {
-            return e
-        }
-    }
-    );
-    display(searchedUsers);
-};
+function checkIsObject(obj) {
+    return typeof obj == "object" && !Array.isArray(obj) ? true : false;
+}
 
-document
-    .getElementById("select")
-    .addEventListener("change", (selectedOption) => {
-        document.getElementById("searchBox").addEventListener("input", (event) => {
-            search(event.target.value, selectedOption.target.value);
+function find(obj, value, key) {
+    let result = false;
+    function checkValueOfObject(obj, value, key) {
+        key.forEach((e) => {
+            if (!checkIsObject(obj[e])) {
+                result =
+                    obj[e].toLowerCase().indexOf(value.toLowerCase()) != -1 && true;
+                return;
+            }
+            let keys = Object.keys(obj[e]);
+            checkValueOfObject(obj[e], value, keys);
         });
-    });
+        return result;
+    }
+    return checkValueOfObject(obj, value, key);
+}
+
+function findByKeys(inputValue, key) {
+    return getFromStorage("users").filter((element) => find(element, inputValue, [key]) ? element : false);
+}
 
 document.getElementById("searchBox").addEventListener("input", (event) => {
-    search(event.target.value, "name");
+    let selectedKey = document.getElementById("select").value;
+    let value = event.target.value;
+    let searchedUsers = findByKeys(value, selectedKey);
+    display(searchedUsers);
+    users = searchedUsers
 });
 
 //when page is load then...
