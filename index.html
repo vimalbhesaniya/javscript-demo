@@ -10,17 +10,17 @@
 
 <body>
     <section class="section">
-
         <div class="formContainer">
             <form action="" name="form" method="get" id="form">
                 <div>
                     <label for="name">Name</label>
-                    <input type="text" name="name" id="name" />
+                    <input type="text" name="name" id="name" class="inputBox" />
+                    <input type="text" hidden name="date" id="date" >
                     <span class="error" id="nameError"></span>
                 </div>
                 <div>
                     <label for="email">Email</label>
-                    <input type="text" name="email" id="email" />
+                    <input type="text" name="email" id="email" class="inputBox" />
                     <span class="error" id="emailError"></span>
                 </div>
                 <div>
@@ -36,7 +36,7 @@
                 <div id="">
                     <label for="name"> Hobby</label>
                     <div id="hobbies">
-                        <input type="checkbox" name="hobby" value="Reading" />
+                        <input type="checkbox" id="reading" name="hobby" value="Reading" />
                         <label for="reading">Reading</label>
                         <input type="checkbox" id="sports" name="hobby" value="Sports" />
                         <label for="sports">Sports</label>
@@ -47,14 +47,14 @@
                 </div>
                 <div>
                     <label for="country">Country</label>
-                    <select name="Country" id="country">
+                    <select name="Country" id="country" class="inputBox" >
 
                     </select>
-                    <span class="error" id="countryError"></span>
+                    <span class="error" id="countryError" ></span>
                 </div>
                 <div>
                     <label for="state">State</label>
-                    <select name="State" id="state">
+                    <select name="State" id="state" class="inputBox" >
 
                     </select>
                     <span class="error" id="stateError">
@@ -62,41 +62,104 @@
                 </div>
                 <div>
                     <label for="city">City</label>
-                    <select name="City" id="city">
+                    <select name="City" id="city" class="inputBox" >
 
                     </select>
                     <span class="error" id="cityError"></span>
                 </div>
                 <div class="buttons">
-                    <button type="submit" class="" id="save">save</button>
-                    <button type="reset" class="hide" id="cancle">Cancle</button>
+                    <button type="submit" class="saveEditButton" id="save">save</button>
+                    <button type="reset" class="hide saveEditButton" id="cancle">Cancle</button>
                 </div>
             </form>
         </div>
 
-        <div class="displayDetails">
+        <div class="displayDetails" >
             <div class="globleActions">
-                <input type="text" id="searchBox" placeholder="Search...">
-                <select name="" id="select" onchange="shortByName(this)">
-                    <option value="0">Default</option>
-                    <option value="1">Ascending</option>
-                    <option value="2">Descending</option>
+                <select name="" id="select" >
+                    <option value="0">Filter By</option>
+                    <option value="name" selected>Name</option>
+                    <option value="email">Email</option>
+                    <option value="country">Country</option>
+                    <option value="state">State</option>
+                    <option value="city">City</option>
                 </select>
+                <input type="text" id="searchBox" placeholder="Search...">
             </div>
 
             <table border="5" id="table">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Gender</th>
-                        <th>Hobby</th>
-                        <th>Conuntry</th>
-                        <th>State</th>
-                        <th>City</th>
                         <th>
+                            <div class="tableHeader">
+                                <p>Name</p>
+                                <div class="sorting" id="sortingButtons">
+                                    <button class="up arrow" value="ascending" id="nameasc" onclick="shortTableWithPerticulerField(this , 'name'  )"><img src="up.png" class="upPng" alt=""></button>
+                                    <button class="down arrow" value="descending" id="namedesc" onclick="shortTableWithPerticulerField(this , 'name')" ><img src="down.png" class="downpng" alt=""></button>
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="tableHeader">
+                                <p>Email</p>
+                                <div class="sorting" id="sortingButtons">
+                                    <button class="up arrow" value="ascending" id="emailasc" onclick="shortTableWithPerticulerField(this , 'email'  )"><img src="up.png" class="upPng" alt=""></button>
+                                    <button class="down arrow" value="descending" id="emaildesc" onclick="shortTableWithPerticulerField(this , 'email' )" ><img src="down.png" class="downpng" alt=""></button>
+                                </div>
+                            </div>
+                        </th>
+                        <th >
+                            <div class="tableHeader">
+                                <p>Gender</p>
+                                <div class="sorting" id="sortingButtons">
+                                    <button class="up arrow" value="ascending" id="genderasc" onclick="shortTableWithPerticulerField(this , 'gender'  )"><img src="up.png" class="upPng" alt=""></button>
+                                    <button class="down arrow" value="descending" id="genderdesc" onclick="shortTableWithPerticulerField(this , 'gender')" ><img src="down.png" class="downpng" alt=""></button>
+                                </div>
+                            </div>
+                        </th>
+                        <th >
+                            <div class="tableHeader">
+                                <p>Hobbies</p>
+                            </div>
+                        </th>
+                        <th >
+                            <div class="tableHeader">
+                                <p>Country</p>
+                                <div class="sorting" id="sortingButtons">
+                                    <button class="up arrow" value="ascendingWithValue" id="countryasc" onclick="shortTableWithPerticulerField(this , 'country' , 'value' )"><img src="up.png" class="upPng" alt=""></button>
+                                    <button class="down arrow" value="descendingWithValue" id="countrydesc" onclick="shortTableWithPerticulerField(this , 'country' , 'value')" ><img src="down.png" class="downpng" alt=""></button>
+                                </div>
+                            </div>
+                        </th>
+                        <th >
+                            <div class="tableHeader">
+                                <p>State</p>
+                                <div class="sorting" id="sortingButtons">
+                                    <button class="up arrow" value="ascendingWithValue" id="stateasc" onclick="shortTableWithPerticulerField(this , 'state' , 'value' )"><img src="up.png" class="upPng" alt=""></button>
+                                    <button class="down arrow"  value="descendingWithValue" id="statedesc" onclick="shortTableWithPerticulerField(this , 'state' , 'value' )" ><img src="down.png" class="downpng" alt=""></button>
+                                </div>
+                            </div>
+                        </th>
+                        <th >
+                            <div class="tableHeader">
+                                <p>City</p>
+                                <div class="sorting" id="sortingButtons">
+                                    <button class="up arrow" value="ascendingWithValue" id="cityasc" onclick="shortTableWithPerticulerField(this , 'city' , 'value'  )"><img src="up.png" class="upPng" alt=""></button>
+                                    <button class="down arrow" value="descendingWithValue" id="citydesc" onclick="shortTableWithPerticulerField(this , 'city' ,'value' )" ><img src="down.png" class="downpng" alt=""></button>
+                                </div>
+                            </div>
+                        </th>
+                        <th >
+                            <div class="tableHeader">
+                                <p>Date Of Join</p>
+                                <div class="sorting" id="sortingButtons">
+                                    <button class="up arrow" value="dateAsc" id="cityasc" onclick="shortTableWithPerticulerField(this , 'date' , 'value'  )"><img src="up.png" class="upPng" alt=""></button>
+                                    <button class="down arrow" value="dateDesc" id="citydesc" onclick="shortTableWithPerticulerField(this , 'date' ,'value' )" ><img src="down.png" class="downpng" alt=""></button>
+                                </div>
+                            </div>
+                        </th>
+                        <th > 
                             <span>Action</span>
-
                         </th>
                     </tr>
                 </thead>
@@ -104,7 +167,6 @@
                 </tbody>
             </table>
         </div>
-
     </section>
     <script src="data.js"></script>
     <script src="app.js"></script>
