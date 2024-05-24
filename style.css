@@ -13,12 +13,13 @@
 }
 
 .formContainer {
-  flex: 0 1 300px;
+  width: 300px;
   padding: 10px 30px;
   background: #fcfefe;
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all 0.5s ease;
 }
 
 .formContainer form {
@@ -196,5 +197,14 @@ form div:not(:nth-child(3)) {
   cursor: pointer;
 }
 
+.burgerBarIcon{
+  width: 30px;
+  height: 30px;
+  
+}
 
-
+.animate{
+  width: 0px;
+  overflow: hidden;
+  padding: 0;
+}

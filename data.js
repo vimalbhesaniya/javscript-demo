@@ -177,3 +177,8 @@ let city = [
   },
 ];
 
+
+
+document.getElementById("burgerButton").onclick = ()=>{
+  sidebar.classList.toggle("animate")
+}
