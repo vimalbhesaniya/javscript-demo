@@ -1,26 +1,43 @@
-let dataTable = document.getElementById("data");
-let countryState = [];
-let statesState = [];
-let cityState = [];
-var cid;
-let errorState = [];
-let username = document.getElementById("name")
-let selectedGender, isAnyError, selectedCheckBox;
-let email = document.getElementById("email")
-let selectedHobbies = [];
-let globleUpdateId;
-let address = [];
-let users = getFromStorage("users") || [];
-let countrySelectBox = document.getElementById("country");
-let stateSelectBox = document.getElementById("state");
-let citySelectBox = document.getElementById("city");
-let form = document.getElementById("form");
-let submitFormState = true;
+let countrySelectBox , stateSelectBox, citySelectBox 
+
+
+const appState = {
+    dataTable: document.getElementById("data"),
+    countryID: '',
+    errorState: [],
+    userName: document.getElementById("name"),
+    selectedGender: '',
+    isAnyError: false,
+    email: document.getElementById("email"),
+    selectedCheckBox: '',
+    selectedHobbies: [],
+    globleUpdateID: '',
+    users: getFromStorage("users") || [],
+    form: document.getElementById("form"),
+    submitFormState: true,
+    country: { key: '', value:''},
+    state: { key: '' , value: '' },
+    city: { key: '' , value: '' },
+    dateOfJoin: new Date().toDateString(),
+    userWhoWillUpdate: {}
+};
+const fetchDATA = () =>{
+    document.querySelectorAll("input[type='checkbox']:checked")
+    .forEach((e) => {
+        appState.selectedHobbies.push(e?.value)
+    });
+    document.querySelectorAll("input[type='radio']:checked").forEach((e) => (appState.selectedGender = e.value))
+    countrySelectBox = document.getElementById("country")
+    stateSelectBox = document.getElementById("state")
+    citySelectBox = document.getElementById("city")
+}
+fetchDATA()
+
 
 let handleEditAndDeleteFlage = () => {
-    if (!submitFormState) {
+    if (!appState.submitFormState) {
         save.innerHTML = "Update";
-        globleUpdateId = undefined;
+        appState.globleUpdateID = '';
     } else {
         save.innerHTML = "Save";
     }
@@ -38,40 +55,14 @@ function getFromStorage(key) {
 
 //clearing field
 let clearField = () => {
-    selectedHobbies = [];
-    address = [];
-    errorState = [];
-    countryState = [];
-    cityState = [];
-    countryState = [];
-    isAnyError = [];
+    appState.selectedHobbies = [];
+    appState.errorState = [];
+    appState.selectedGender = ''
+    appState.isAnyError = [];
 };
-
-//Handling  Form
-function getDataFromUser() {
-    clearField();
-    document.querySelectorAll("input[type='radio']:checked").forEach((e) => (selectedGender = e.value));
-    selectedCheckBox = document.querySelectorAll("input[type='checkbox']:checked");
-    selectedCheckBox.forEach((e) => selectedHobbies.push(e?.value));
-    let selectedAddress = document.querySelectorAll("select");
-    selectedAddress.forEach((e) => {
-        if (e.selectedOptions.item(0)?.value !== "0") {
-            address.push({
-                key: e.selectedOptions?.item(0)?.value,
-                value: e.selectedOptions?.item(0)?.innerHTML,
-            });
-        } else {
-            address.push({
-                key: e.selectedOptions.item(0)?.value,
-                value: e.selectedOptions.item(0)?.value,
-            });
-        }
-    });
-}
 
 //displaing data in table
 let display = (array) => {
-    let target = document.getElementById("data");
     let text = "<tr >";
     array.map((item, i) => {
         for (const key in item) {
@@ -82,14 +73,14 @@ let display = (array) => {
             }
         }
         text += `<td class='action' >
-        <button class="btnEdit" id='btnEdit${i}' ${globleUpdateId == item.id && `style='cursor:not-allowed' disabled`
+        <button class="btnEdit" id='btnEdit${i}' ${appState.globleUpdateID == item.id && `style='cursor:not-allowed' disabled`
             }   onclick="handleUpdate(${item.id})">Edit</button>
-        <button class="btnDelete" id='btnDelete${i}' ${globleUpdateId == item.id && `style='cursor:not-allowed' disabled`
+        <button class="btnDelete" id='btnDelete${i}' ${appState.globleUpdateID == item.id && `style='cursor:not-allowed' disabled`
             }  onclick="handledelete(${item.id})">Delete</button>
         </td>`;
         text += `</tr>`;
     });
-    target.innerHTML = text;
+    appState.dataTable.innerHTML = text;
 };
 //get country
 let getCountry = () => {
@@ -115,11 +106,12 @@ let handleSelection = (array, selectedBox, val, text, title, valueToSelect) => {
     });
     selectedBox.innerHTML = bind;
 };
+
 //country handling...
 countrySelectBox.addEventListener("change", (event) => {
     handleSelection([], stateSelectBox, "", "", "Select State");
-    cid = event.target.value;
-    let allState = getStateForContry(cid)[0];
+    appState.countryID = event.target.value;
+    let allState = getStateForContry(appState.countryID)[0];
     handleSelection(allState, stateSelectBox, "sid", "state", "Select State");
     handleSelection([], citySelectBox, "", "", "Select City");
 });
@@ -127,8 +119,8 @@ countrySelectBox.addEventListener("change", (event) => {
 //state handling...
 stateSelectBox.addEventListener("change", (event) => {
     handleSelection([], citySelectBox, "", "", "Select City");
-    let sid = event.target.value;
-    let cities = getCityForState(cid, sid);
+    let stateID = event.target.value;
+    let cities = getCityForState(appState.countryID, stateID);
     handleSelection(cities[0], citySelectBox, "id", "name", "Select City");
 });
 
@@ -137,7 +129,7 @@ let checkEmail = (email, whereToShow) => {
     let error = document.getElementById(whereToShow);
     let emailRegex =
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (email.length !== 0) {
+    if (appState.email.length !== 0) {
         error.innerHTML = "";
         if (!emailRegex.test(email)) {
             error.innerHTML = "Please enter a valid email ";
@@ -152,32 +144,32 @@ let checkEmail = (email, whereToShow) => {
     }
 };
 
-document
-    .getElementById("email")
-    .addEventListener("change", (event) =>
-        checkEmail(event.target.value, "emailError")
-    );
+document.getElementById("email").addEventListener("change", (event) =>
+    checkEmail(event.target.value, "emailError")
+);
 
 //this method will check input is valid or not
 let checkInputs = (errMsg, value, whereToShow, type, allowNumber) => {
-    let where = document.getElementById(whereToShow);
+    clearField()
+    fetchDATA()
+    let errorElement = document.getElementById(whereToShow);
     switch (type) {
         case "text":
             if (value.trim().length == 0) {
-                where.innerHTML = errMsg;
+                errorElement.innerHTML = errMsg;
                 return false;
             } else {
                 if (allowNumber) {
                     let numRegx = /[^a-zA-Z ]/g;
                     if (numRegx.test(value)) {
-                        where.innerHTML = "Number & Special characters not allowed";
+                        errorElement.innerHTML = "Number & Special characters not allowed";
                         return false;
                     } else {
-                        where.innerHTML = "";
+                        errorElement.innerHTML = "";
                         return true;
                     }
                 }
-                where.innerHTML = "";
+                errorElement.innerHTML = "";
                 return true;
             }
             break;
@@ -186,28 +178,28 @@ let checkInputs = (errMsg, value, whereToShow, type, allowNumber) => {
             break;
         case "radio":
             if (!value) {
-                where.innerHTML = errMsg;
+                errorElement.innerHTML = errMsg;
                 return false;
             } else {
-                where.innerHTML = "";
+                errorElement.innerHTML = "";
                 return true;
             }
             break;
         case "select":
             if (value == "0") {
-                where.innerHTML = errMsg;
+                errorElement.innerHTML = errMsg;
                 return false;
             } else {
-                where.innerHTML = "";
+                errorElement.innerHTML = "";
                 return true;
             }
             break;
         case "checkbox":
             if (value.length == 0) {
-                where.innerHTML = errMsg;
+                errorElement.innerHTML = errMsg;
                 return false;
             } else {
-                where.innerHTML = "";
+                errorElement.innerHTML = "";
                 return true;
             }
             break;
@@ -216,192 +208,172 @@ let checkInputs = (errMsg, value, whereToShow, type, allowNumber) => {
             break;
     }
 };
+
 let checkErrors = () => {
-    getDataFromUser();
-    return (errorState = [
-        checkInputs(
-            "Please select your name",
-            username.value,
-            "nameError",
-            "text",
-            true
-        ),
-        checkInputs("", email.value, "emailError", "email"),
+    clearField()
+    fetchDATA()
+    return (appState.errorState = [
+        checkInputs("Please select your name", appState.userName.value, "nameError", "text", true),
+        checkInputs("", appState.email.value, "emailError", "email"),
         checkInputs(
             "Please select your gender",
-            selectedGender,
+            appState.selectedGender,
             "genderError",
             "radio"
         ),
         checkInputs(
             "Please select atleast one hobby",
-            selectedHobbies,
+            appState.selectedHobbies,
             "hobbyError",
             "checkbox"
         ),
         checkInputs(
             "Please select your country",
-            address[0].value,
+            appState.country.value,
             "countryError",
             "select"
         ),
         checkInputs(
             "Please select your state",
-            address[1].value,
+            appState.state.value,
             "stateError",
             "select"
         ),
         checkInputs(
             "Please select your city",
-            address[2].value,
+            appState.city.value,
             "cityError",
             "select"
         ),
     ]);
 };
 
-username.addEventListener("input", (nameEvent) =>
+appState.userName.addEventListener("input", (nameEvent) =>
     checkInputs("Name is required", nameEvent.target.value, "nameError", "text", true)
 );
-email.addEventListener("input", (emailEvent) =>
+appState.email.addEventListener("input", (emailEvent) =>
     checkInputs("", emailEvent.target.value, "emailError", "email")
 );
-document.getElementById("country").addEventListener("input", (countryEvent) =>
+countrySelectBox.addEventListener("input", (countryEvent) =>
     checkInputs("Please select your country", countryEvent.target.value, "countryError", "text")
 );
-document.getElementById("state").addEventListener("input", (stateEvent) =>
+stateSelectBox.addEventListener("input", (stateEvent) =>
     checkInputs("Please select your state", stateEvent.target.value, "stateError", "text")
 );
-document.getElementById("city").addEventListener("input", (cityEvent) =>
+citySelectBox.addEventListener("input", (cityEvent) =>
     checkInputs("Please select your city", cityEvent.target.value, "cityError", "text")
 );
-document.getElementsByName("hobby").forEach((e) =>
-    e.addEventListener("input", () => {
-        getDataFromUser(); checkInputs("Please select atleast one hobby", selectedHobbies, "hobbyError", "checkbox");
-    })
+document.getElementsByName("hobby").forEach((hobbyEvent) =>
+    hobbyEvent.addEventListener("input", () => {fetchDATA(); checkInputs("Please select atleast one hobby", appState.selectedHobbies, "hobbyError", "checkbox"); console.log(appState.selectedHobbies); })
 );
 
 document.getElementsByName("gender").forEach((genderEvent) =>
-    genderEvent.addEventListener("input", () => {
-        getDataFromUser(); checkInputs("Please select your gender", selectedGender, "genderError", "radio");
-    })
+    genderEvent.addEventListener("input", () => {fetchDATA(); checkInputs("Please select your gender", appState.selectedGender, "genderError", "radio"); })
 );
 
 //when user submitng form=
-document.getElementById("form").addEventListener("submit", (event) => {
-    event.preventDefault();
+document.getElementById("form").addEventListener("submit", (formEvent) => {
+    clearField()
+    fetchDATA();
+    formEvent.preventDefault();
     handleEditAndDeleteFlage();
-    let date = new Date().toDateString()
-    getDataFromUser();
-    globleUpdateId = getFromStorage("userIdToUpdate");
+    appState.globleUpdateID = getFromStorage("userIdToUpdate");
     let assignDataToArray = {
-        name: username?.value,
-        email: email?.value,
-        gender: selectedGender,
-        hobby: selectedHobbies,
-        country: { id: address[0]?.key, value: address[0]?.value },
-        state: { id: address[1]?.key, value: address[1]?.value },
-        city: { id: address[2]?.key, value: address[2]?.value },
-        id: submitFormState ? (new Date() * 100) / 50 : globleUpdateId,
-        date: date,
+        name: appState.userName?.value,
+        email: appState.email?.value,
+        gender: appState.selectedGender,
+        hobby: appState.selectedHobbies,
+        country: { id: appState.country.key, value: appState.country.value },
+        state: { id: appState.state.key, value: appState.state.value },
+        city: { id: appState.city.key, value: appState.city.value },
+        id: appState.submitFormState ? (new Date() * 100) / 50 : appState.globleUpdateID,
+        date: appState.dateOfJoin,
     };
 
-    isAnyError = checkErrors().every((err) => (err ? 1 : 0));
-    if (isAnyError) {
-        if (submitFormState) {
-            users = [...users, assignDataToArray];
+    appState.isAnyError = checkErrors().every((error) => (error ? 1 : 0));
+    if (appState.isAnyError) {
+        if (appState.submitFormState) {
+            appState.users = [...appState.users, assignDataToArray];
         } else {
-            dataToUpdateId = users.findIndex((e) => e.id == globleUpdateId);
-            users = users.with(dataToUpdateId, assignDataToArray);
+            let updateIndex = appState.users.findIndex((usersData) => usersData.id == appState.globleUpdateID);
+            appState.users = appState.users.with(updateIndex, assignDataToArray);
             cancle.classList.add("hide");
-            submitFormState = true;
+            appState.submitFormState = true;
             handleEditAndDeleteFlage();
             beforUpdate()
         }
         form.reset();
     }
-    globleUpdateId = undefined;
-    setInStorage("users", users);
+    appState.globleUpdateID = '';
+    setInStorage("users", appState.users);
     display(getFromStorage("users"));
     clearField();
-    submitFormState = true;
+    appState.submitFormState = true;
 });
 
 //when user click on delete button
 let handledelete = (id) => {
     let confirmation = confirm("Are you sure");
     if (confirmation) {
-        users = users.filter((e) => e.id != id);
-        setInStorage("users", users);
+        appState.users = appState.users.filter((usersData) => usersData.id != id);
+        setInStorage("users", appState.users);
         display(getFromStorage("users"));
     } else {
         return;
     }
 };
 
-let deleteButton, editButton;
-function afterUpdate(id) {
-    deleteButton = document.getElementById(`btnDelete${id}`);
-    editButton = document.getElementById(`btnEdit${id}`);
-    cancle.classList.remove("hide");
-}
-
 function beforUpdate() {
     cancle.classList.add("hide");
     handleSelection([], citySelectBox, "", "", "Select City", "0");
     handleSelection([], stateSelectBox, "", "", "Select State", "0");
     handleSelection([], countrySelectBox, "", "", "Select Country", "0");
-    globleUpdateId = undefined;
-    display(users);
-    submitFormState = true;
+    appState.globleUpdateID = '';
+    display(appState.users);
+    appState.submitFormState = true;
     handleEditAndDeleteFlage();
 }
 
 //update functionality
-let userWhoWillUpdate;
+
 let handleUpdate = (updateId) => {
-    submitFormState = false;
+    fetchDATA();
+    appState.submitFormState = false;
     handleEditAndDeleteFlage();
-    userWhoWillUpdate = users.find((e) => e.id == updateId);
+    appState.userWhoWillUpdate = appState.users.find((usersData) => usersData.id == updateId);
     setInStorage("userIdToUpdate", updateId);
-    globleUpdateId = localStorage.getItem("userIdToUpdate");
-    display(users);
-    getDataFromUser();
-    afterUpdate(updateId);
+    appState.globleUpdateID = localStorage.getItem("userIdToUpdate");
+    display(appState.users);
+    cancle.classList.remove("hide");
     cancle.addEventListener("click", () => beforUpdate());
-    username.value = userWhoWillUpdate.name;
-    email.value = userWhoWillUpdate.email;
+    appState.userName.value = appState.userWhoWillUpdate.name;
+    appState.email.value = appState.userWhoWillUpdate.email;
     let radio = document.querySelectorAll("input[type=radio]");
-    radio.forEach((e) => {
-        if (e.value == userWhoWillUpdate.gender) e.checked = true;
+    radio.forEach((elements) => {
+        if (elements.value == appState.userWhoWillUpdate.gender) elements.checked = true;
     });
-
-    let checkBox = document.querySelectorAll("input[type=checkbox]");
-    checkBox.forEach((e) => {
-        userWhoWillUpdate.hobby.includes(e.value)
-            ? (e.checked = true)
-            : (e.checked = false);
+    let allCheckBox = document.querySelectorAll("input[type=checkbox]");
+    allCheckBox.forEach((checkBoxes) => {
+        ;
+        checkBoxes.checked = appState.userWhoWillUpdate.hobby.includes(checkBoxes.value) ? true : false;
     });
-    date.value = userWhoWillUpdate.date;
-    handleSelection(country,countrySelectBox,"cid", "country","Select Country",userWhoWillUpdate.country.id
+    handleSelection(country, countrySelectBox, "cid", "country", "Select Country", appState.userWhoWillUpdate.country.id
     );
 
-    let allState = getStateForContry(userWhoWillUpdate.country.id)[0];
-    handleSelection(allState,stateSelectBox,"sid","state","Select State",userWhoWillUpdate.state.id
+    let allState = getStateForContry(appState.userWhoWillUpdate.country.id)[0];
+    handleSelection(allState, stateSelectBox, "sid", "state", "Select State", appState.userWhoWillUpdate.state.id
     );
-    cid = userWhoWillUpdate.country.id;
-    sid = userWhoWillUpdate.state.id;
-    let cities = getCityForState(cid, sid);
-    handleSelection(cities[0], citySelectBox,"id", "name", "Select City", userWhoWillUpdate.city.id
+
+    appState.countryID = appState.userWhoWillUpdate.country.id;
+    let stateID = appState.userWhoWillUpdate.state.id;
+    let cities = getCityForState(appState.countryID, stateID);
+    handleSelection(cities[0], citySelectBox, "id", "name", "Select City", appState.userWhoWillUpdate.city.id
     );
 };
 
 //sorting
 let shortTableWithPerticulerField = (direction, sortWith, value) => {
-    let sorted;
-    element = document.getElementById(direction.id);
-    activeMode = document.activeElement;
-
+    let sorted = [];
     let allArrows = document.querySelectorAll(".arrow");
     allArrows.forEach((e) => {
         e.classList.remove("hide");
@@ -410,14 +382,12 @@ let shortTableWithPerticulerField = (direction, sortWith, value) => {
     switch (direction.value) {
         case "ascending":
             direction.classList.add("hide");
-            sorted = users.toSorted((a, b) =>
-                a[sortWith] < b[sortWith] ? -1 : a[sortWith] == b[sortWith] ? 0 : 1
-            );
+            sorted = appState.users.toSorted((a, b) => a[sortWith] < b[sortWith] ? -1 : a[sortWith] == b[sortWith] ? 0 : 1);
             display(sorted);
             break;
         case "descending":
             direction.classList.add("hide");
-            sorted = users.toSorted((a, b) =>
+            sorted = appState.users.toSorted((a, b) =>
                 a[sortWith] > b[sortWith] ? -1 : a[sortWith] == b[sortWith] ? 0 : 1
             );
             display(sorted);
@@ -425,29 +395,17 @@ let shortTableWithPerticulerField = (direction, sortWith, value) => {
             break;
         case "ascendingWithValue":
             direction.classList.add("hide");
-            sorted = users.toSorted((a, b) =>
-                a[sortWith][value] < b[sortWith][value]
-                    ? -1
-                    : a[sortWith][value] == b[sortWith][value]
-                        ? 0
-                        : 1
-            );
+            sorted = appState.users.toSorted((a, b) => a[sortWith][value] < b[sortWith][value] ? -1 : a[sortWith][value] == b[sortWith][value] ? 0 : 1);
             display(sorted);
             break;
         case "descendingWithValue":
             direction.classList.add("hide");
-            sorted = users.toSorted((a, b) =>
-                a[sortWith][value] > b[sortWith][value]
-                    ? -1
-                    : a[sortWith][value] == b[sortWith][value]
-                        ? 0
-                        : 1
-            );
+            sorted = appState.users.toSorted((a, b) => a[sortWith][value] > b[sortWith][value] ? -1 : a[sortWith][value] == b[sortWith][value] ? 0 : 1);
             display(sorted);
             break;
         case "dateAsc":
             direction.classList.add("hide");
-            sorted = users.toSorted((a, b) => {
+            sorted = appState.users.toSorted((a, b) => {
                 a = new Date(a[sortWith]);
                 b = new Date(b[sortWith]);
                 return a - b;
@@ -456,7 +414,7 @@ let shortTableWithPerticulerField = (direction, sortWith, value) => {
             break;
         case "dateDesc":
             direction.classList.add("hide");
-            sorted = users.toSorted((a, b) => {
+            sorted = appState.users.toSorted((a, b) => {
                 a = new Date(a[sortWith]);
                 b = new Date(b[sortWith]);
                 return b - a;
@@ -480,8 +438,7 @@ function find(obj, value, key) {
     function checkValueOfObject(obj, value, key) {
         key.forEach((e) => {
             if (!checkIsObject(obj[e])) {
-                result =
-                    obj[e].toLowerCase().indexOf(value.toLowerCase()) != -1 && true;
+                result = obj[e].toLowerCase().indexOf(value.toLowerCase()) != -1 && true;
                 return;
             }
             let keys = Object.keys(obj[e]);
@@ -501,12 +458,13 @@ document.getElementById("searchBox").addEventListener("input", (event) => {
     let value = event.target.value;
     let searchedUsers = findByKeys(value, selectedKey);
     display(searchedUsers);
-    users = searchedUsers
+    appState.users = searchedUsers
 });
 
 //when page is load then...
+fetchDATA()
 handleSelection(country, countrySelectBox, "cid", "country", "Select Country");
 handleSelection([], stateSelectBox, "", "", "Select State");
 handleSelection([], citySelectBox, "", "", "Select City");
-setInStorage("users", users);
+setInStorage("users", appState.users);
 display(getFromStorage("users"));
