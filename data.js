@@ -94,7 +94,7 @@ let city = [
   },
   {
     cid: 1,
-    sid: 2,
+    sid: 3,
     cities: [
       { id : 1 , name: "Gwalior" },
       { id : 2 , name: "Orchha" },
@@ -111,7 +111,7 @@ let city = [
   },
   {
     cid: 1,
-    sid: 2,
+    sid: 4,
     cities: [
       {  id : 1 , name: "jaipur" },
       {  id : 2 , name: "Jodhpur" },

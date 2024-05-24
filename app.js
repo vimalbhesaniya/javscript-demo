@@ -1,9 +1,5 @@
 let countrySelectBox , stateSelectBox, citySelectBox 
-<<<<<<< HEAD
 let defaultIndex = 0 ;
-=======
-
->>>>>>> 59c682cc16a86ad0ceffff2e9b2a34bcbcdab785
 
 const appState = {
     dataTable: document.getElementById("data"),
@@ -23,12 +19,10 @@ const appState = {
     state: { key: '' , value: '' },
     city: { key: '' , value: '' },
     dateOfJoin: new Date().toDateString(),
-    userWhoWillUpdate: {}
+    userWhoWillUpdate: {},
+    temp : []
 };
-<<<<<<< HEAD
 
-=======
->>>>>>> 59c682cc16a86ad0ceffff2e9b2a34bcbcdab785
 const fetchDATA = () =>{
     document.querySelectorAll("input[type='checkbox']:checked")
     .forEach((e) => {
@@ -38,15 +32,12 @@ const fetchDATA = () =>{
     countrySelectBox = document.getElementById("country")
     stateSelectBox = document.getElementById("state")
     citySelectBox = document.getElementById("city")
-<<<<<<< HEAD
     appState.country.key = countrySelectBox.value
     appState.country.value = countrySelectBox.selectedOptions[defaultIndex]?.label
     appState.state.key = stateSelectBox.value
     appState.state.value = stateSelectBox.selectedOptions[defaultIndex]?.label
     appState.city.key = citySelectBox.value
     appState.city.value = citySelectBox.selectedOptions[defaultIndex]?.label
-=======
->>>>>>> 59c682cc16a86ad0ceffff2e9b2a34bcbcdab785
 }
 fetchDATA()
 
@@ -76,6 +67,7 @@ let clearField = () => {
     appState.errorState = [];
     appState.selectedGender = ''
     appState.isAnyError = [];
+    appState.temp = []
 };
 
 //displaing data in table
@@ -105,15 +97,17 @@ let getCountry = () => {
 };
 //get state
 let getStateForContry = (id) => {
-    return state.filter((e) => id == e.cid && e.states).map((e) => e.states);
+    let result;
+    state.filter((e) => result = id == e.cid ? e.states : result)
+    return result
 };
-console.log(getStateForContry(1));
 //get city
 let getCityForState = (cid, sid) => {
-    return city
-        .filter((e) => e.sid == sid && e.cid == cid && e)
-        .map((e) => e.cities);
+    let result;
+    city.filter((e) => result = e.sid == sid && e.cid == cid ? e.cities : result)
+    return result
 };
+
 
 //handle select box
 let handleSelection = (array, selectedBox, val, text, title, valueToSelect) => {
@@ -129,11 +123,8 @@ let handleSelection = (array, selectedBox, val, text, title, valueToSelect) => {
 countrySelectBox.addEventListener("change", (event) => {
     handleSelection([], stateSelectBox, "", "", "Select State");
     appState.countryID = event.target.value;
-<<<<<<< HEAD
-    let allState = getStateForContry(appState.countryID)[defaultIndex];
-=======
-    let allState = getStateForContry(appState.countryID)[0];
->>>>>>> 59c682cc16a86ad0ceffff2e9b2a34bcbcdab785
+    console.log(appState.countryID);
+    let allState = getStateForContry(appState.countryID);
     handleSelection(allState, stateSelectBox, "sid", "state", "Select State");
     handleSelection([], citySelectBox, "", "", "Select City");
     
@@ -144,11 +135,7 @@ stateSelectBox.addEventListener("change", (event) => {
     handleSelection([], citySelectBox, "", "", "Select City");
     let stateID = event.target.value;
     let cities = getCityForState(appState.countryID, stateID);
-<<<<<<< HEAD
-    handleSelection(cities[defaultIndex], citySelectBox, "id", "name", "Select City");
-=======
-    handleSelection(cities[0], citySelectBox, "id", "name", "Select City");
->>>>>>> 59c682cc16a86ad0ceffff2e9b2a34bcbcdab785
+    handleSelection(cities, citySelectBox, "id", "name", "Select City");
 });
 
 //validations
@@ -179,10 +166,6 @@ document.getElementById("email").addEventListener("change", (event) =>
 let checkInputs = (errMsg, value, whereToShow, type, allowNumber) => {
     clearField()
     fetchDATA()
-<<<<<<< HEAD
-    console.log(value);
-=======
->>>>>>> 59c682cc16a86ad0ceffff2e9b2a34bcbcdab785
     let errorElement = document.getElementById(whereToShow);
     switch (type) {
         case "text":
@@ -226,11 +209,7 @@ let checkInputs = (errMsg, value, whereToShow, type, allowNumber) => {
             }
             break;
         case "checkbox":
-<<<<<<< HEAD
             if (value.length == defaultIndex) {
-=======
-            if (value.length == 0) {
->>>>>>> 59c682cc16a86ad0ceffff2e9b2a34bcbcdab785
                 errorElement.innerHTML = errMsg;
                 return false;
             } else {
@@ -264,31 +243,19 @@ let checkErrors = () => {
         ),
         checkInputs(
             "Please select your country",
-<<<<<<< HEAD
             appState.country.key,
-=======
-            appState.country.value,
->>>>>>> 59c682cc16a86ad0ceffff2e9b2a34bcbcdab785
             "countryError",
             "select"
         ),
         checkInputs(
             "Please select your state",
-<<<<<<< HEAD
             appState.state.key,
-=======
-            appState.state.value,
->>>>>>> 59c682cc16a86ad0ceffff2e9b2a34bcbcdab785
             "stateError",
             "select"
         ),
         checkInputs(
             "Please select your city",
-<<<<<<< HEAD
             appState.city.key,
-=======
-            appState.city.value,
->>>>>>> 59c682cc16a86ad0ceffff2e9b2a34bcbcdab785
             "cityError",
             "select"
         ),
@@ -324,12 +291,8 @@ document.getElementById("form").addEventListener("submit", (formEvent) => {
     fetchDATA();
     formEvent.preventDefault();
     handleEditAndDeleteFlage();
-    appState.globleUpdateID = getFromStorage("userIdToUpdate");
-<<<<<<< HEAD
+    appState.globleUpdateID = getFromStorage("userIdToUpdate");    
     let newUserData = {
-=======
-    let assignDataToArray = {
->>>>>>> 59c682cc16a86ad0ceffff2e9b2a34bcbcdab785
         name: appState.userName?.value,
         email: appState.email?.value,
         gender: appState.selectedGender,
@@ -344,7 +307,6 @@ document.getElementById("form").addEventListener("submit", (formEvent) => {
     appState.isAnyError = checkErrors().every((error) => (error ? 1 : 0));
     if (appState.isAnyError) {
         if (appState.submitFormState) {
-<<<<<<< HEAD
             appState.users = [...appState.users, newUserData];
         } else {
             appState.users = appState.users.map((oldUserData) =>{
@@ -354,12 +316,6 @@ document.getElementById("form").addEventListener("submit", (formEvent) => {
                 return oldUserData
             })
             
-=======
-            appState.users = [...appState.users, assignDataToArray];
-        } else {
-            let updateIndex = appState.users.findIndex((usersData) => usersData.id == appState.globleUpdateID);
-            appState.users = appState.users.with(updateIndex, assignDataToArray);
->>>>>>> 59c682cc16a86ad0ceffff2e9b2a34bcbcdab785
             cancle.classList.add("hide");
             appState.submitFormState = true;
             handleEditAndDeleteFlage();
@@ -381,18 +337,14 @@ let handledelete = (id) => {
         appState.users = appState.users.filter((usersData) => usersData.id != id);
         setInStorage("users", appState.users);
         display(getFromStorage("users"));
-    }
+    } 
 };
 
 function beforUpdate() {
     cancle.classList.add("hide");
     handleSelection([], citySelectBox, "", "", "Select City", "0");
     handleSelection([], stateSelectBox, "", "", "Select State", "0");
-<<<<<<< HEAD
     handleSelection(country, countrySelectBox, "cid", "country", "Select Country");
-=======
-    handleSelection([], countrySelectBox, "", "", "Select Country", "0");
->>>>>>> 59c682cc16a86ad0ceffff2e9b2a34bcbcdab785
     appState.globleUpdateID = '';
     display(appState.users);
     appState.submitFormState = true;
@@ -426,22 +378,15 @@ let handleUpdate = (updateId) => {
     handleSelection(country, countrySelectBox, "cid", "country", "Select Country", appState.userWhoWillUpdate.country.id
     );
 
-<<<<<<< HEAD
-    let allState = getStateForContry(appState.userWhoWillUpdate.country.id)[defaultIndex];
-=======
-    let allState = getStateForContry(appState.userWhoWillUpdate.country.id)[0];
->>>>>>> 59c682cc16a86ad0ceffff2e9b2a34bcbcdab785
+    let allState = getStateForContry(appState.userWhoWillUpdate.country.id);
     handleSelection(allState, stateSelectBox, "sid", "state", "Select State", appState.userWhoWillUpdate.state.id
     );
 
     appState.countryID = appState.userWhoWillUpdate.country.id;
     let stateID = appState.userWhoWillUpdate.state.id;
     let cities = getCityForState(appState.countryID, stateID);
-<<<<<<< HEAD
-    handleSelection(cities[defaultIndex], citySelectBox, "id", "name", "Select City", appState.userWhoWillUpdate.city.id
-=======
-    handleSelection(cities[0], citySelectBox, "id", "name", "Select City", appState.userWhoWillUpdate.city.id
->>>>>>> 59c682cc16a86ad0ceffff2e9b2a34bcbcdab785
+    console.log(cities);
+    handleSelection(cities, citySelectBox, "id", "name", "Select City", appState.userWhoWillUpdate.city.id
     );
 };
 
@@ -465,6 +410,7 @@ let shortTableWithPerticulerField = (direction, sortWith, value) => {
                 a[sortWith] > b[sortWith] ? -1 : a[sortWith] == b[sortWith] ? 0 : 1
             );
             display(sorted);
+
             break;
         case "ascendingWithValue":
             direction.classList.add("hide");
